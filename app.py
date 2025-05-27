@@ -44,12 +44,12 @@ def index():
             file.save(filepath)
 
             try:
-                print(f"[INFO] Model yang dipilih: {model_key}")  # <<--- CETAK MODEL YANG DIPILIH
+                print(f"[INFO] Model yang dipilih: {model_key}") 
                 model = load_selected_model(model_key)
                 img_array = prepare_image(filepath)
                 preds = model.predict(img_array)
                 prediction = CLASS_NAMES[np.argmax(preds)]
-                print(f"[INFO] Prediksi hasil: {prediction}")  # <<--- CETAK HASIL PREDIKSI
+                print(f"[INFO] Prediksi hasil: {prediction}")  
             except Exception as e:
                 prediction = f"Error: {str(e)}"
                 print(f"[ERROR] {str(e)}")
