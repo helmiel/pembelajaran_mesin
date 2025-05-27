@@ -20,7 +20,7 @@
             border-radius: 12px;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
         }
-        input[type="file"], select, button {
+        input[type="file"], button {
             display: block;
             margin: 15px auto;
             width: 80%;
@@ -32,34 +32,66 @@
             margin-top: 20px;
             border-radius: 10px;
         }
-        .result {
-            font-size: 20px;
+        .result-section {
+            background: white;
+            margin: 30px auto;
+            padding: 20px;
+            width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .result-title {
+            font-size: 22px;
             font-weight: bold;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+        .result-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .result-list li {
+            font-size: 18px;
+            padding: 8px 0;
+        }
+        .confidence {
             color: #27ae60;
-            margin-top: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <h1>Klasifikasi Gambar Sayuran</h1>
+
     <form method="post" enctype="multipart/form-data">
-        <label>Pilih model:</label>
-        <select name="model" required>
-            <option value="">-- Pilih model --</option>
-            <option value="pretrained_no_ft" {% if selected_model == 'pretrained_no_ft' %}selected{% endif %}>Pretrained No Fine-Tuning</option>
-            <option value="finetune_25" {% if selected_model == 'finetune_25' %}selected{% endif %}>Fine-Tuning 25%</option>
-            <option value="finetune_50" {% if selected_model == 'finetune_50' %}selected{% endif %}>Fine-Tuning 50%</option>
-            <option value="finetune_100" {% if selected_model == 'finetune_100' %}selected{% endif %}>Fine-Tuning 100%</option>
-        </select>
         <input type="file" name="image" accept="image/*" required>
         <button type="submit">Prediksi</button>
     </form>
 
-    {% if prediction %}
-        <div class="result">Prediksi: {{ prediction }}</div>
-        {% if image_path %}
-            <img src="{{ image_path }}" alt="Uploaded Image">
-        {% endif %}
+    {% if predictions %}
+        <div class="result-section">
+            <div class="result-title">Hasil Prediksi dari Semua Model:</div>
+            {% if image_path %}
+                <img src="{{ image_path }}" alt="Uploaded Image">
+            {% endif %}
+            <ul class="result-list">
+                {% for model, result in predictions.items() %}
+                    <li>
+                        <strong>{{ model }}:</strong>
+                        {% if result is string %}
+                            {{ result }}
+                        {% else %}
+                            {{ result.class }} 
+                            (<span class="confidence">{{ result.confidence }}</span>)
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
     {% endif %}
 </body>
 </html>

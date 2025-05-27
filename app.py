@@ -31,32 +31,43 @@ def prepare_image(img_path):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    prediction = None
-    selected_model = None
+    predictions = {}  # Menyimpan prediksi semua model
 
     if request.method == 'POST':
         file = request.files['image']
-        model_key = request.form['model']
-        selected_model = model_key
 
         if file:
-            filepath = os.path.join('static/uploads', file.filename)
+            upload_folder = 'static/uploads'
+            os.makedirs(upload_folder, exist_ok=True)
+
+            filepath = os.path.join(upload_folder, file.filename)
             file.save(filepath)
 
             try:
-                print(f"[INFO] Model yang dipilih: {model_key}") 
-                model = load_selected_model(model_key)
                 img_array = prepare_image(filepath)
-                preds = model.predict(img_array)
-                prediction = CLASS_NAMES[np.argmax(preds)]
-                print(f"[INFO] Prediksi hasil: {prediction}")  
+
+                for model_key, model_path in MODELS.items():
+                    if not os.path.exists(model_path):
+                        predictions[model_key] = f"Model '{model_key}' tidak ditemukan."
+                        continue
+
+                    model = load_model(model_path)
+                    preds = model.predict(img_array)
+                    confidence = np.max(preds)
+                    predicted_class = CLASS_NAMES[np.argmax(preds)]
+
+                    predictions[model_key] = {
+                        "class": predicted_class,
+                        "confidence": f"{confidence:.2%}"
+                    }
+
             except Exception as e:
-                prediction = f"Error: {str(e)}"
-                print(f"[ERROR] {str(e)}")
+                return render_template('index.html', error=f"Error: {str(e)}")
 
-            return render_template('index.html', prediction=prediction, image_path=filepath, selected_model=selected_model)
+            return render_template('index.html', predictions=predictions, image_path=filepath)
 
-    return render_template('index.html', prediction=prediction, selected_model=selected_model)
+    return render_template('index.html')
+
 
 
 if __name__ == '__main__':
