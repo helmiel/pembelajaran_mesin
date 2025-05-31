@@ -8,10 +8,11 @@ from PIL import Image
 app = Flask(__name__)
 
 MODELS = {
-    "pretrained_no_ft": "models/pretrained_no_finetune.h5",
-    "finetune_25": "models/pretrained_finetune_25.h5",
-    "finetune_50": "models/pretrained_finetune_50.h5",
-    "finetune_100": "models/pretrained_finetune_100.h5"
+    "baseline": "models/baseline.h5",
+    "dense_64_epochs_5": "models/dense_64_epochs_5.h5",
+    "dense_128_epoch_5": "models/dense_128_epochs_5.h5",
+    "dense_64_epochs_10": "models/dense_64_epochs_10.h5",
+    "dense_128_epochs_10": "models/dense_128_epochs_10.h5"
 }
 
 CLASS_NAMES = {0: "Bean", 1: "Bitter_Gourd", 2: "Bottle_Gourd", 3: "Brinjal", 4: "Broccoli", 5: "Cabbage", 6: "Capsicum", 7: "Carrot", 8: "Cauliflower",

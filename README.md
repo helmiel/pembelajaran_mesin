@@ -4,11 +4,12 @@ A simple web application built with Flask and TensorFlow to classify images of v
 🚀 Features
 Upload an image of a vegetable
 
-Choose from 4 different pretrained models:
-- pretrained_no_finetune
-- finetune_25
-- finetune_50
-- finetune_100
+Choose from 5 different pretrained models:
+- baseline model (MobileNet)
+- Add 64 neuron hidden layer with 5 epoch
+- Add 128 neuron hidden layer with 5 epoch
+- Add 64 neuron hidden layer with 10 epoch
+- Add 128 neuron hidden layer with 10 epoch
 
 🧠 Model Classes
 The model supports classification of the following vegetables:
